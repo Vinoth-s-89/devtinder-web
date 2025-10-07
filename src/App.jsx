@@ -1,20 +1,22 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Body from "./components/Body";
-import Login from "./components/Login";
-import Profile from "./components/Profile";
 import { Provider } from "react-redux";
 import store from "./utils/appStore";
+import { routePaths, routes } from "./utils/routes";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
     <>
       <Provider store={store}>
-        <BrowserRouter basename="/">
+        <BrowserRouter basename={routePaths.home}>
           <Routes>
-            <Route path="/" element={<Body />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={<Profile />} />
+            <Route path={routePaths.home} element={<Body />}>
+              {routes.map(({ path, component: Component }) => (
+                <Route key={path} path={path} Component={Component} />
+              ))}
             </Route>
+            <Route path="*" Component={NotFound} />
           </Routes>
         </BrowserRouter>
       </Provider>

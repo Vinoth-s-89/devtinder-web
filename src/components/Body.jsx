@@ -1,13 +1,38 @@
-import React from "react";
-import Navbar from "./Navbar";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
+import Navbar from "./NavBar";
+import { routePaths } from "../utils/routes";
+import { apiPaths, appApi } from "../utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Body = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
+  const user = useSelector((store) => store.user);
+
+  const fetchUser = async () => {
+    try {
+      const { data } = await appApi.get(apiPaths.viewProfile);
+      dispatch(addUser(data));
+    } catch (error) {
+      if (error.status === 401) {
+        navigate(routePaths.login);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (pathname !== routePaths.login) fetchUser();
+  }, []);
   return (
-    <div className="flex flex-col h-screen">
+    <div className="h-screen w-screen flex flex-col">
       <Navbar />
-      <Outlet />
+      <div className="bg-base-300 h-full w-full flex-grow overflow-y-auto">
+        <Outlet />
+      </div>
       <Footer />
     </div>
   );
