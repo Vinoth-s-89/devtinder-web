@@ -4,6 +4,7 @@ export const BASE_URL = "http://localhost:3000";
 
 export const apiPaths = {
   login: "/login",
+  logout: "/logout",
   viewProfile: "/profile/view",
 };
 

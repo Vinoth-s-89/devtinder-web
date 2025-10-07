@@ -1,9 +1,25 @@
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { routePaths } from "../utils/routes";
+import { apiPaths, appApi } from "../utils/api";
+import { removeUser } from "../utils/userSlice";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleMenuClick = () => {
+    document.activeElement.blur();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await appApi.post(apiPaths.logout);
+      dispatch(removeUser());
+      navigate(routePaths.login);
+      handleMenuClick();
+    } catch (error) {}
+  };
   return (
     <div className="navbar bg-neutral shadow-sm">
       <div className="flex-1">
@@ -32,12 +48,11 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <Link to={routePaths.profile}>Profile</Link>
+                <Link to={routePaths.profile} onClick={handleMenuClick}>
+                  Profile
+                </Link>
               </li>
-              <li>
-                <a>Settings</a>
-              </li>
-              <li>
+              <li onClick={handleLogout}>
                 <a>Logout</a>
               </li>
             </ul>

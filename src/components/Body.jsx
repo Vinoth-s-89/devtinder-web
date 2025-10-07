@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import Navbar from "./NavBar";
 import { routePaths } from "../utils/routes";
 import { apiPaths, appApi } from "../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { getCookie } from "../utils/cookies";
 
 const Body = () => {
   const navigate = useNavigate();
@@ -25,8 +26,15 @@ const Body = () => {
   };
 
   useEffect(() => {
-    if (pathname !== routePaths.login) fetchUser();
-  }, []);
+    if (!user && pathname !== routePaths.login) {
+      fetchUser();
+    }
+  }, [pathname]);
+
+  if (pathname !== routePaths.login && !getCookie("token")) {
+    return <Navigate to={routePaths.login} replace />;
+  }
+
   return (
     <div className="h-screen w-screen flex flex-col">
       <Navbar />

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { addUser } from "../utils/userSlice";
 import { apiPaths, appApi } from "../utils/api";
+import { getCookie } from "../utils/cookies";
+import { routePaths } from "../utils/routes";
 
 const Login = () => {
   const [userInput, setUserInput] = useState({
@@ -18,6 +20,8 @@ const Login = () => {
       navigate("/");
     } catch (error) {}
   };
+
+  if (getCookie("token")) return <Navigate to={routePaths.home} replace />;
   return (
     <div className="flex justify-center items-center h-full w-full">
       <div className="card bg-base-100 w-96 shadow-sm">
