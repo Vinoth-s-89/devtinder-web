@@ -11,6 +11,7 @@ const Login = () => {
     email: "vinoth.s@gmail.com",
     password: "Vinoth@123",
   });
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogin = async () => {
@@ -18,7 +19,9 @@ const Login = () => {
       const { data } = await appApi.post(apiPaths.login, userInput);
       dispatch(addUser(data?.data));
       navigate("/");
-    } catch (error) {}
+    } catch (error) {
+      setError(error?.response?.data?.message || "Something went wrong");
+    }
   };
 
   if (getCookie("token")) return <Navigate to={routePaths.home} replace />;
@@ -45,7 +48,7 @@ const Login = () => {
               Password :{" "}
             </legend>
             <input
-              type="password"
+              // type="password"
               className="input"
               value={userInput.password}
               onChange={(e) =>
@@ -53,6 +56,7 @@ const Login = () => {
               }
             />
           </fieldset>
+          {error && <p className="self-start text-red-500">{error}</p>}
           <div className="card-actions justify-end">
             <button className="btn btn-primary" onClick={handleLogin}>
               Login

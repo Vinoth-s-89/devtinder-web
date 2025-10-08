@@ -6,6 +6,8 @@ export const apiPaths = {
   login: "/login",
   logout: "/logout",
   viewProfile: "/profile/view",
+  feed: "/user/feed",
+  updateProfile: "/profile/update",
 };
 
 export const appApi = axios.create({

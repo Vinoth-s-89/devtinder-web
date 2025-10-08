@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { routePaths } from "../utils/routes";
 import { apiPaths, appApi } from "../utils/api";
 import { removeUser } from "../utils/userSlice";
+import { clearFeed } from "../utils/feedSlice";
+import { defaultUrl } from "../utils/constants";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
@@ -16,6 +18,7 @@ const Navbar = () => {
     try {
       await appApi.post(apiPaths.logout);
       dispatch(removeUser());
+      dispatch(clearFeed());
       navigate(routePaths.login);
       handleMenuClick();
     } catch (error) {}
@@ -39,7 +42,7 @@ const Navbar = () => {
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component"
-                  src={user?.profileUrl}
+                  src={user?.profileUrl || defaultUrl}
                 />
               </div>
             </div>
