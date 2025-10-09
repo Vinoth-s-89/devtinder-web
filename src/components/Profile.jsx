@@ -5,8 +5,8 @@ import SelectField from "./shared/SelectField";
 import TextArea from "./shared/TextArea";
 import UserCard from "./shared/UserCard";
 import { apiPaths, appApi } from "../utils/api";
-import Toast from "./shared/Toast";
 import { addUser } from "../utils/userSlice";
+import useToast from "../utils/useToast";
 
 const genderValues = [
   {
@@ -22,7 +22,7 @@ const Profile = () => {
   const user = useSelector((state) => state.user);
   const [editFields, setEditFields] = useState({});
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const { showToast } = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,8 +32,7 @@ const Profile = () => {
   const handleSubmit = async () => {
     try {
       const { data } = await appApi.patch(apiPaths.updateProfile, editFields);
-      setMessage(data?.message);
-      setTimeout(() => setMessage(""), 2000);
+      showToast(data?.message);
       setError("");
       dispatch(addUser(data?.data));
     } catch (error) {
@@ -107,7 +106,6 @@ const Profile = () => {
         </div>
       </div>
       <UserCard user={editFields} disableActions />
-      <Toast message={message} />
     </div>
   );
 };

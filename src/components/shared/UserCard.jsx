@@ -1,7 +1,7 @@
 import React from "react";
 import { defaultUrl } from "../../utils/constants";
 
-const UserCard = ({ user, disableActions = false }) => {
+const UserCard = ({ user, ActionComponent }) => {
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -26,12 +26,7 @@ const UserCard = ({ user, disableActions = false }) => {
           </p>
         )}
         <p>{about || "This is default about"}</p>
-        {!disableActions && (
-          <div className="card-actions justify-end">
-            <button className="btn btn-secondary">Ignore</button>
-            <button className="btn btn-primary">Interested</button>
-          </div>
-        )}
+        {ActionComponent && ActionComponent}
       </div>
     </div>
   );

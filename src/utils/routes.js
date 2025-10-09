@@ -6,6 +6,7 @@ export const routePaths = {
   profile: "/profile",
   connections: "/connections",
   requests: "/requests",
+  signUp: "/signup",
 };
 
 export const routes = [
@@ -16,6 +17,10 @@ export const routes = [
   {
     path: routePaths.login,
     component: lazy(() => import("../components/Login")),
+  },
+  {
+    path: routePaths.signUp,
+    component: lazy(() => import("../components/SignUp")),
   },
   {
     path: routePaths.profile,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { addUser } from "../utils/userSlice";
 import { apiPaths, appApi } from "../utils/api";
 import { getCookie } from "../utils/cookies";
@@ -57,10 +57,16 @@ const Login = () => {
             />
           </fieldset>
           {error && <p className="self-start text-red-500">{error}</p>}
-          <div className="card-actions justify-end">
+          <div className="card-actions flex flex-col items-center">
             <button className="btn btn-primary" onClick={handleLogin}>
               Login
             </button>
+            <Link
+              to={routePaths.signUp}
+              className="link link-primary link-hover"
+            >
+              New User? Sign Up Here
+            </Link>
           </div>
         </div>
       </div>

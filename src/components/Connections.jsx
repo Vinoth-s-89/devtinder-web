@@ -18,7 +18,11 @@ const Connections = () => {
   return (
     <div className="h-full flex flex-col items-center py-3.5 gap-y-3.5">
       <div className="text-3xl tracking-wide">Connections</div>
-      <UserInfoCard userData={connections} />
+      <div className="min-w-[300px] w-[50%] max-w-[700px] flex flex-col gap-3.5">
+        {connections.map((connection) => (
+          <UserInfoCard data={connection} key={connection._id} />
+        ))}
+      </div>
     </div>
   );
 };
