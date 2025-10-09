@@ -32,6 +32,9 @@ const Requests = () => {
     <div className="h-full flex flex-col items-center py-3.5 gap-y-3.5">
       <div className="text-3xl tracking-wide">Connection Requests</div>
       <div className="min-w-[300px] w-[50%] max-w-[700px] flex flex-col gap-3.5">
+        {(!requests || !requests.length) && (
+          <div className="text-center text-gray-300">No Requests Found</div>
+        )}
         {requests.map((request) => (
           <UserInfoCard
             data={request}

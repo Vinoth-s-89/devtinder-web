@@ -19,6 +19,9 @@ const Connections = () => {
     <div className="h-full flex flex-col items-center py-3.5 gap-y-3.5">
       <div className="text-3xl tracking-wide">Connections</div>
       <div className="min-w-[300px] w-[50%] max-w-[700px] flex flex-col gap-3.5">
+        {(!connections || !connections.length) && (
+          <div className="text-center text-gray-300">No Connections Found</div>
+        )}
         {connections.map((connection) => (
           <UserInfoCard data={connection} key={connection._id} />
         ))}
