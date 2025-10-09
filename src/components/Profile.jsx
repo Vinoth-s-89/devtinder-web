@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TextField from "./shared/TextField";
 import SelectField from "./shared/SelectField";
 import TextArea from "./shared/TextArea";
-import UserCard from "./UserCard";
+import UserCard from "./shared/UserCard";
 import { apiPaths, appApi } from "../utils/api";
 import Toast from "./shared/Toast";
 import { addUser } from "../utils/userSlice";

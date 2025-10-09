@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import UserCard from "./UserCard";
+import UserCard from "./shared/UserCard";
 import { useEffect } from "react";
 import { apiPaths, appApi } from "../utils/api";
 import { setFeed } from "../utils/feedSlice";

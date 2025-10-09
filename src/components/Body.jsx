@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import Navbar from "./NavBar";
@@ -39,7 +39,9 @@ const Body = () => {
     <div className="h-screen w-screen flex flex-col">
       <Navbar />
       <div className="bg-base-300 h-full w-full flex-grow overflow-y-auto">
-        <Outlet />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
       </div>
       <Footer />
     </div>

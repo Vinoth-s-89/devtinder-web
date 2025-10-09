@@ -6,6 +6,12 @@ import { removeUser } from "../utils/userSlice";
 import { clearFeed } from "../utils/feedSlice";
 import { defaultUrl } from "../utils/constants";
 
+const navItems = [
+  { name: "Profile", path: routePaths.profile },
+  { name: "Requests", path: routePaths.requests },
+  { name: "Connections", path: routePaths.connections },
+];
+
 const Navbar = () => {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
@@ -50,11 +56,13 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <Link to={routePaths.profile} onClick={handleMenuClick}>
-                  Profile
-                </Link>
-              </li>
+              {navItems.map((item, index) => (
+                <li key={index}>
+                  <Link to={item.path} onClick={handleMenuClick}>
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
               <li onClick={handleLogout}>
                 <a>Logout</a>
               </li>

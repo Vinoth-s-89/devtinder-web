@@ -12,8 +12,12 @@ function App() {
         <BrowserRouter basename={routePaths.home}>
           <Routes>
             <Route path={routePaths.home} element={<Body />}>
-              {routes.map(({ path, component: Component }) => (
-                <Route key={path} path={path} Component={Component} />
+              {routes.map((route, index) => (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={<route.component />}
+                />
               ))}
             </Route>
             <Route path="*" Component={NotFound} />

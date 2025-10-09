@@ -1,5 +1,5 @@
 import React from "react";
-import { defaultUrl } from "../utils/constants";
+import { defaultUrl } from "../../utils/constants";
 
 const UserCard = ({ user, disableActions = false }) => {
   if (!user) {

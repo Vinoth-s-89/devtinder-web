@@ -8,6 +8,9 @@ export const apiPaths = {
   viewProfile: "/profile/view",
   feed: "/user/feed",
   updateProfile: "/profile/update",
+  connections: "/user/connections",
+  requests: "/user/request/received",
+  reviewRequest: "/request/review",
 };
 
 export const appApi = axios.create({
