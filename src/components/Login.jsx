@@ -8,8 +8,8 @@ import { routePaths } from "../utils/routes";
 
 const Login = () => {
   const [userInput, setUserInput] = useState({
-    email: "vinoth.s@gmail.com",
-    password: "Vinoth@123",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState("");
   const dispatch = useDispatch();
