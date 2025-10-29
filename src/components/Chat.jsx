@@ -4,32 +4,53 @@ import { apiPaths, appApi } from "../utils/api";
 import { defaultUrl, icons } from "../utils/constants";
 import { routePaths } from "../utils/routes";
 import { useSelector } from "react-redux";
-
-const messages = [
-  "You were the Chosen One!",
-  "I hate you!",
-  "You were the Chosen One!",
-  "I hate you!",
-  "You were the Chosen One!",
-  "I hate you!",
-  "You were the Chosen One!",
-  "I hate you!",
-  "You were the Chosen One!",
-  "I hate you!",
-];
+import { createSocketConnection } from "../utils/socket";
 
 const Chat = () => {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
   const [userDetail, setUserDetails] = useState(null);
-  const { userId = "" } = useParams();
+  const { targetUserId = "" } = useParams();
   const inputRef = useRef(null);
+  const scrollRef = useRef(null);
+  const socketRef = useRef(null);
   const user = useSelector((state) => state.user);
 
   const fetchUserDetails = async () => {
     try {
-      const { data } = await appApi.get(`${apiPaths.userDetail}/${userId}`);
+      const { data } = await appApi.get(
+        `${apiPaths.userDetail}/${targetUserId}`
+      );
       setUserDetails(data);
     } catch (error) {}
   };
+
+  const sendMessage = () => {
+    if (newMessage.trim() === "") return;
+    socketRef.current.emit("sendMessage", {
+      userId: user._id,
+      targetUserId,
+      newMessage,
+    });
+    setNewMessage("");
+  };
+
+  useEffect(() => {
+    if (targetUserId && user._id) {
+      const socket = createSocketConnection();
+      socket.emit("joinChat", { targetUserId, userId: user._id });
+
+      socket.on("messageReceived", (msg) => {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      });
+      socketRef.current = socket;
+      return () => {
+        if (socket) {
+          socket.disconnect();
+        }
+      };
+    }
+  }, [targetUserId, user.id]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -38,10 +59,16 @@ const Chat = () => {
   }, [inputRef]);
 
   useEffect(() => {
-    if (userId) {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView();
+    }
+  }, [scrollRef]);
+
+  useEffect(() => {
+    if (targetUserId) {
       fetchUserDetails();
     }
-  }, [userId]);
+  }, [targetUserId]);
 
   return (
     <div className="w-full h-full flex items-center justify-center">
@@ -62,18 +89,20 @@ const Chat = () => {
         <div className="overflow-hidden">
           <div className="w-full h-full p-3 overflow-y-auto">
             {messages.map((message, index) => {
-              const isEven = index % 2 === 0;
+              const isSender = message.fromId === user._id;
               return (
                 <div
                   key={index}
-                  className={`chat ${isEven ? "chat-end" : "chat-start"} mb-4`}
+                  className={`chat ${
+                    isSender ? "chat-end" : "chat-start"
+                  } mb-4`}
                 >
                   <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
                       <img
                         alt="Tailwind CSS chat bubble component"
                         src={
-                          isEven
+                          isSender
                             ? user.profileUrl
                             : userDetail?.profileUrl || defaultUrl
                         }
@@ -82,14 +111,15 @@ const Chat = () => {
                   </div>
                   <div
                     className={`chat-bubble ${
-                      isEven ? "bg-gray-500" : "bg-gray-800"
+                      isSender ? "bg-gray-500" : "bg-gray-800"
                     }`}
                   >
-                    {message}
+                    {message.message}
                   </div>
                 </div>
               );
             })}
+            <div ref={scrollRef}></div>
           </div>
         </div>
         <div className="py-2.5 px-4 grid grid-cols-[1fr_40px] gap-x-3 items-center border-t border-t-gray-200">
@@ -97,8 +127,18 @@ const Chat = () => {
             type="text"
             className="h-12 rounded-lg outline-none border border-gray-300 px-3 text-lg"
             ref={inputRef}
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
           />
-          <div className="bg-primary h-12 aspect-square fill-white rounded-lg p-2 cursor-pointer">
+          <div
+            onClick={sendMessage}
+            className="bg-primary h-12 aspect-square fill-white rounded-lg p-2 cursor-pointer"
+          >
             {icons.sendMessage}
           </div>
         </div>

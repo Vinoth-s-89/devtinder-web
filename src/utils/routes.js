@@ -36,7 +36,7 @@ export const routes = [
     component: lazy(() => import("../components/Requests")),
   },
   {
-    path: routePaths.chat + "/:userId",
+    path: routePaths.chat + "/:targetUserId",
     component: lazy(() => import("../components/Chat")),
   },
 ];
