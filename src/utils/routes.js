@@ -7,6 +7,7 @@ export const routePaths = {
   connections: "/connections",
   requests: "/requests",
   signUp: "/signup",
+  chat: "/chat",
 };
 
 export const routes = [
@@ -33,5 +34,9 @@ export const routes = [
   {
     path: routePaths.requests,
     component: lazy(() => import("../components/Requests")),
+  },
+  {
+    path: routePaths.chat + "/:userId",
+    component: lazy(() => import("../components/Chat")),
   },
 ];

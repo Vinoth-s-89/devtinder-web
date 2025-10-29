@@ -14,6 +14,7 @@ export const apiPaths = {
   requests: "/user/request/received",
   reviewRequest: "/request/review",
   sendRequest: "/request/send",
+  userDetail: "/user/details",
 };
 
 export const appApi = axios.create({

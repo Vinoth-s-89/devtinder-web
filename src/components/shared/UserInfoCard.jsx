@@ -1,9 +1,9 @@
 import React from "react";
 import { defaultUrl } from "../../utils/constants";
 
-const UserInfoCard = ({ data, ActionComponent }) => {
+const UserInfoCard = ({ data, ActionComponent, enableChat }) => {
   return (
-    <div className="w-full grid grid-cols-[80px_1fr] bg-base-100 p-3.5 items-start gap-2.5">
+    <div className="w-full grid grid-cols-[80px_1fr_auto] bg-base-100 p-3.5 items-center gap-2.5">
       <div className="w-full">
         <img
           className="rounded-full aspect-square object-cover"

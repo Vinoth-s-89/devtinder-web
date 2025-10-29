@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { apiPaths, appApi } from "../utils/api";
 import UserInfoCard from "./shared/UserInfoCard";
+import { Link } from "react-router-dom";
+import { routePaths } from "../utils/routes";
 
 const Connections = () => {
   const [connections, setConnections] = useState([]);
@@ -23,7 +25,17 @@ const Connections = () => {
           <div className="text-center text-gray-300">No Connections Found</div>
         )}
         {connections.map((connection) => (
-          <UserInfoCard data={connection} key={connection._id} />
+          <UserInfoCard
+            data={connection}
+            key={connection._id}
+            ActionComponent={
+              <div className="flex items-center">
+                <Link to={`${routePaths.chat}/${connection._id}`}>
+                  <button className="btn btn-sm btn-primary">Chat</button>
+                </Link>
+              </div>
+            }
+          />
         ))}
       </div>
     </div>
