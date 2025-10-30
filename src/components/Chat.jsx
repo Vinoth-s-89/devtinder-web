@@ -7,32 +7,31 @@ import { useSelector } from "react-redux";
 import { createSocketConnection } from "../utils/socket";
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [userDetail, setUserDetails] = useState(null);
+  const [chatInfo, setChatInfo] = useState({ messages: [], userDetail: {} });
   const { targetUserId = "" } = useParams();
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
   const socketRef = useRef(null);
   const user = useSelector((state) => state.user);
 
-  const fetchUserDetails = async () => {
-    try {
-      const { data } = await appApi.get(
-        `${apiPaths.userDetail}/${targetUserId}`
-      );
-      setUserDetails(data);
-    } catch (error) {}
-  };
-
   const sendMessage = () => {
     if (newMessage.trim() === "") return;
     socketRef.current.emit("sendMessage", {
-      userId: user._id,
+      senderId: {
+        _id: user._id,
+      },
+      message: newMessage,
       targetUserId,
-      newMessage,
     });
     setNewMessage("");
+  };
+
+  const fetchChats = async () => {
+    try {
+      const { data } = await appApi.get(`${apiPaths.chats}/${targetUserId}`);
+      setChatInfo(data);
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -41,7 +40,7 @@ const Chat = () => {
       socket.emit("joinChat", { targetUserId, userId: user._id });
 
       socket.on("messageReceived", (msg) => {
-        setMessages((prevMessages) => [...prevMessages, msg]);
+        setChatInfo((prev) => ({ ...prev, messages: [...prev.messages, msg] }));
       });
       socketRef.current = socket;
       return () => {
@@ -62,13 +61,15 @@ const Chat = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView();
     }
-  }, [scrollRef]);
+  }, [scrollRef, chatInfo.messages]);
 
   useEffect(() => {
     if (targetUserId) {
-      fetchUserDetails();
+      fetchChats();
     }
   }, [targetUserId]);
+
+  const { userDetail = {}, messages = [] } = chatInfo;
 
   return (
     <div className="w-full h-full flex items-center justify-center">
@@ -89,7 +90,7 @@ const Chat = () => {
         <div className="overflow-hidden">
           <div className="w-full h-full p-3 overflow-y-auto">
             {messages.map((message, index) => {
-              const isSender = message.fromId === user._id;
+              const isSender = message.senderId?._id === user?._id;
               return (
                 <div
                   key={index}
@@ -113,13 +114,16 @@ const Chat = () => {
                     className={`chat-bubble ${
                       isSender ? "bg-gray-500" : "bg-gray-800"
                     }`}
+                    ref={(ref) => {
+                      if (index === messages?.length - 1)
+                        scrollRef.current = ref;
+                    }}
                   >
                     {message.message}
                   </div>
                 </div>
               );
             })}
-            <div ref={scrollRef}></div>
           </div>
         </div>
         <div className="py-2.5 px-4 grid grid-cols-[1fr_40px] gap-x-3 items-center border-t border-t-gray-200">
