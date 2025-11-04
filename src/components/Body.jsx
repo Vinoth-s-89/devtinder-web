@@ -7,6 +7,7 @@ import { apiPaths, appApi } from "../utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import Toast from "./shared/Toast";
+import { removeCookie } from "../utils/cookies";
 // import { getCookie } from "../utils/cookies";
 
 const Body = () => {
@@ -21,9 +22,8 @@ const Body = () => {
       const { data } = await appApi.get(apiPaths.viewProfile);
       dispatch(addUser(data));
     } catch (error) {
-      if (error.status === 401) {
-        navigate(routePaths.login);
-      }
+      removeCookie("token");
+      navigate(routePaths.login);
     }
   };
 
