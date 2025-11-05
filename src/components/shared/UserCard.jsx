@@ -7,11 +7,13 @@ const UserCard = ({ user, ActionComponent }) => {
   }
 
   const { firstName, lastName, profileUrl, about, age, gender } = user;
+  let imageUrl = profileUrl || defaultUrl;
+  if (typeof imageUrl === "object") imageUrl = URL.createObjectURL(profileUrl);
   return (
     <div className="card bg-base-100 w-96 shadow-sm">
       <figure>
         <img
-          src={profileUrl || defaultUrl}
+          src={imageUrl}
           className="w-full aspect-square object-contain"
           alt="Shoes"
         />

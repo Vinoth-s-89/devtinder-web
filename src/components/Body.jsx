@@ -35,7 +35,7 @@ const Body = () => {
     ) {
       fetchUser();
     }
-  }, [pathname]);
+  }, [pathname, user]);
 
   // if (pathname !== routePaths.login && !getCookie("token")) {
   //   return <Navigate to={routePaths.login} replace />;

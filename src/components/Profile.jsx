@@ -5,8 +5,10 @@ import SelectField from "./shared/SelectField";
 import TextArea from "./shared/TextArea";
 import UserCard from "./shared/UserCard";
 import { apiPaths, appApi } from "../utils/api";
-import { addUser } from "../utils/userSlice";
+import { addUser, removeUser } from "../utils/userSlice";
 import useToast from "../utils/useToast";
+import FileInput from "./shared/FileInput";
+import { convertFormData } from "../utils/formData";
 
 const genderValues = [
   {
@@ -25,16 +27,22 @@ const Profile = () => {
   const { showToast } = useToast();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value, type, files } = e.target;
+    if (type === "file" && files && files[0]) {
+      value = files[0];
+    }
     setEditFields({ ...editFields, [name]: value });
   };
 
   const handleSubmit = async () => {
     try {
-      const { data } = await appApi.patch(apiPaths.updateProfile, editFields);
+      const { data } = await appApi.patch(
+        apiPaths.updateProfile,
+        convertFormData(editFields)
+      );
       showToast(data?.message);
       setError("");
-      dispatch(addUser(data?.data));
+      window.location.reload();
     } catch (error) {
       setError(error?.response?.data?.message || "Something went wrong");
     }
@@ -88,6 +96,16 @@ const Profile = () => {
             name="profileUrl"
             label="Profile Url"
             onChange={handleChange}
+            value={
+              typeof editFields.profileUrl === "object"
+                ? URL.createObjectURL(editFields.profileUrl)
+                : editFields.profileUrl
+            }
+          />
+          <FileInput
+            name="profileUrl"
+            label="Profile Image"
+            onChange={handleChange}
             value={editFields.profileUrl}
           />
           <TextArea
@@ -99,6 +117,16 @@ const Profile = () => {
 
           {error && <p className="self-start text-red-500">{error}</p>}
           <div className="card-actions self-end mr-4.5">
+            {editFields.profileUrl && (
+              <button
+                className="btn btn-error"
+                onClick={() =>
+                  setEditFields((prev) => ({ ...prev, profileUrl: "" }))
+                }
+              >
+                Remove Profile Image
+              </button>
+            )}
             <button className="btn btn-primary" onClick={handleSubmit}>
               Save Profile
             </button>
