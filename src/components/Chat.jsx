@@ -20,6 +20,7 @@ const Chat = () => {
     socketRef.current.emit("sendMessage", {
       senderId: {
         _id: user._id,
+        name: user.firstName + " " + user.lastName,
       },
       message: newMessage,
       targetUserId,
@@ -49,7 +50,7 @@ const Chat = () => {
         }
       };
     }
-  }, [targetUserId, user.id]);
+  }, [targetUserId, user?.id]);
 
   useEffect(() => {
     if (inputRef.current) {

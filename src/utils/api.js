@@ -16,6 +16,7 @@ export const apiPaths = {
   sendRequest: "/request/send",
   userDetail: "/user/details",
   chats: "/chats",
+  subscribe: "/subscribe",
 };
 
 export const appApi = axios.create({

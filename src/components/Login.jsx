@@ -5,6 +5,7 @@ import { addUser } from "../utils/userSlice";
 import { apiPaths, appApi } from "../utils/api";
 import { getCookie } from "../utils/cookies";
 import { routePaths } from "../utils/routes";
+import { subscribeToPush } from "../utils/pushNotification";
 
 const Login = () => {
   const [userInput, setUserInput] = useState({
@@ -18,7 +19,8 @@ const Login = () => {
     try {
       const { data } = await appApi.post(apiPaths.login, userInput);
       dispatch(addUser(data?.data));
-      navigate("/");
+      subscribeToPush().catch((err) => console.log(err));
+      navigate(routePaths.home);
     } catch (error) {
       setError(error?.response?.data?.message || "Something went wrong");
     }
